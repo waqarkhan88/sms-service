@@ -1,0 +1,68 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+ 
+    <appender name="default" class="LoggerAppenderEcho">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message%newline" />
+        </layout>
+        <param name="htmlLineBreaks" value="true" />
+    </appender>
+    
+    <appender name="SMSCentreFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message%newline" />
+        </layout>
+        <param name="file" value="logs/SMSCentre.log" />
+    </appender>
+	
+	<appender name="DatabaseFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message%newline" />
+        </layout>
+        <param name="file" value="logs/Database.log" />
+    </appender>
+	
+	<appender name="ScrappersFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message%newline" />
+        </layout>
+        <param name="file" value="logs/Scrappers.log" />
+    </appender>
+	
+	<appender name="MainFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message%newline" />
+        </layout>
+        <param name="file" value="logs/Main.log" />
+    </appender>
+	
+	<appender name="ExecutionTimeFileAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date | %message Seconds%newline" />
+        </layout>
+        <param name="file" value="logs/ExecutionTime.log" />
+    </appender>
+ 
+    <logger name="SMSCentre">
+        <appender_ref ref="SMSCentreFileAppender" />
+    </logger>
+	
+	<logger name="Main">
+        <appender_ref ref="MainFileAppender" />
+    </logger>
+	
+	<logger name="Database">
+        <appender_ref ref="DatabaseFileAppender" />
+    </logger>
+	
+	<logger name="Scrappers">
+        <appender_ref ref="ScrappersFileAppender" />
+    </logger>
+	
+	<logger name="ExecutionTime">
+        <appender_ref ref="ExecutionTimeFileAppender" />
+    </logger>
+	
+    <root>
+        <appender_ref ref="default" />
+    </root>
+</configuration>
