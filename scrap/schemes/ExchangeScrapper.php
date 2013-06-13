@@ -1,12 +1,12 @@
 <?php
 require_once ('ForexScrapper.php');
-require_once ('/../../libs/log4php/Logger.php');
+require_once (dirname(__FILE__) . '/../../libs/log4php/Logger.php');
 Logger::configure ( 'logs/config.xml' );
 class ExchangeScrapper extends ForexScrapper {
-	private $log;
+	var $log;
 	public function ExchangeScrapper() {
 		parent::__construct ();
-		$log = Logger::getLogger ( 'Scrappers' );
+		$this->log = Logger::getLogger ( 'Scrappers' );
 		$this->url = 'http://www.exchangerates.org.uk/usd-pkr-exchange-rate-history.html';
 		$this->fetch ();
 	}
@@ -15,7 +15,7 @@ class ExchangeScrapper extends ForexScrapper {
 		if (isset ( $matches [1] [0] )) {
 			$this->dollarRate = $matches [1] [0];
 		} else {
-			$log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
+			$this->log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
 			$this->dollarRate = null;
 		}
 	}

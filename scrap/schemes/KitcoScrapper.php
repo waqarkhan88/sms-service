@@ -1,12 +1,12 @@
 <?php
 require_once ('MetalScrapper.php');
-require_once ('/../../libs/log4php/Logger.php');
+require_once (dirname(__FILE__) . '/../../libs/log4php/Logger.php');
 Logger::configure ( 'logs/config.xml' );
 class KitcoScrapper extends MetalScrapper {
 	private $log;
 	public function KitcoScrapper() {
 		parent::__construct ();
-		$log = Logger::getLogger ( 'Scrappers' );
+		$this->log = Logger::getLogger ( 'Scrappers' );
 		$this->url = 'http://www.kitco.com/market/';
 		$this->fetch ();
 	}
@@ -25,7 +25,7 @@ class KitcoScrapper extends MetalScrapper {
 			$this->goldRate = $rates ['Gold'];
 			$this->silverRate = $rates ['Silver'];
 		} else {
-			$log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
+			$this->log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
 			$this->goldRate = null;
 			$this->silverRate = null;
 		}

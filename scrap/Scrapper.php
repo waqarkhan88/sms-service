@@ -1,5 +1,5 @@
 <?php
-require_once ('/../libs/simpletest/browser.php');
+require_once (dirname(__FILE__) . '/../libs/simpletest/browser.php');
 abstract class Scrapper {
 	protected $browser;
 	protected $url;

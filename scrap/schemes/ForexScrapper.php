@@ -1,5 +1,5 @@
 <?php
-require_once ('/../Scrapper.php');
+require_once (dirname(__FILE__) . '/../Scrapper.php');
 class ForexScrapper extends Scrapper {
 	protected $dollarRate;
 	public function ForexScrapper() {

@@ -1,12 +1,12 @@
 <?php
 require_once ('ForexScrapper.php');
-require_once ('/../../libs/log4php/Logger.php');
+require_once (dirname(__FILE__) . '/../../libs/log4php/Logger.php');
 Logger::configure ( 'logs/config.xml' );
 class ForexPKScrapper extends ForexScrapper {
 	private $log;
 	public function ForexPKScrapper() {
 		parent::__construct ();
-		$log = Logger::getLogger ( 'Scrappers' );
+		$this->log = Logger::getLogger ( 'Scrappers' );
 		$this->browser->addHeader ( 'Referer: http://www.forex.pk/currency-converter.php' );
 		$this->url = 'http://www.forex.pk/currency-converter.php';
 		$this->fetch ();
@@ -16,7 +16,7 @@ class ForexPKScrapper extends ForexScrapper {
 		if (isset ( $matches [1] [0] )) {
 			$this->dollarRate = $matches [1] [0];
 		} else {
-			$log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
+			$this->log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
 			$this->dollarRate = null;
 		}
 	}
