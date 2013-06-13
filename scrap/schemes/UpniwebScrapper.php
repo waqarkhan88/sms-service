@@ -1,1 +1,37 @@
-<?php/*	****					Modification History								****	********************************************************************************	********************************************************************************	****		Name: 					Haseeb Ahmed							****	****		Date: 					November 10,2012						****		****		Description:			Fetch data from internet				****		********************************************************************************	*********************************************************************************/require_once('MetalScrapper.php');require_once('/../../libs/log4php/Logger.php');class UpniwebScrapper extends MetalScrapper{	public $log;	public function UpniwebScrapper()	{		parent::__construct();		$log = Logger::getLogger('Scrappers');		$this->url = 'http://upniweb.com/SpotGold.aspx';		$this->Fetch();	}		public function Fetch()	{		$this->browser->get($this->url);		$this->rawData = $this->browser->getContent();		echo $this->rawData;	}		public function Parse()	{		$rates = null;		preg_match('/lbl1ounceUSD[^>]*>(.*?)</', $this->rawData, $matches);				$rates['Gold'] = isset($matches[1]) ? $matches[1] : null;		preg_match('/lbl10GrmPKR4[^>]*>(.*?)</', $this->rawData, $matches);				$rates['Silver'] = isset($matches[1]) ? $matches[1] : null;				if($rates != null && $rates['Gold'] != null && $rates['Silver'] != null)		{			$this->goldRate = $rates['Gold'];			$this->silverRate = $rates['Silver'];		}		else		{			$log->warn(__CLASS__ . ' - Unable to scrap rates.');			$this->goldRate = null;			$this->silverRate = null;		}	}		public function GetParsedData()	{		$this->Parse();		return parent::GetParsedData();	}}?>
+<?php
+require_once ('MetalScrapper.php');
+require_once (dirname(__FILE__) . '/../../libs/log4php/Logger.php');
+class UpniwebScrapper extends MetalScrapper {
+	public $log;
+	public function UpniwebScrapper() {
+		parent::__construct ();
+		$this->log = Logger::getLogger ( 'Scrappers' );
+		$this->url = 'http://upniweb.com/SpotGold.aspx';
+		$this->fetch ();
+	}
+	public function fetch() {
+		$this->browser->get ( $this->url );
+		$this->rawData = $this->browser->getContent ();
+		echo $this->rawData;
+	}
+	public function parse() {
+		$rates = null;
+		preg_match ( '/lbl1ounceUSD[^>]*>(.*?)</', $this->rawData, $matches );
+		$rates ['Gold'] = isset ( $matches [1] ) ? $matches [1] : null;
+		preg_match ( '/lbl10GrmPKR4[^>]*>(.*?)</', $this->rawData, $matches );
+		$rates ['Silver'] = isset ( $matches [1] ) ? $matches [1] : null;
+		if ($rates != null && $rates ['Gold'] != null && $rates ['Silver'] != null) {
+			$this->goldRate = $rates ['Gold'];
+			$this->silverRate = $rates ['Silver'];
+		} else {
+			$this->log->warn ( __CLASS__ . ' - Unable to scrap rates.' );
+			$this->goldRate = null;
+			$this->silverRate = null;
+		}
+	}
+	public function getParsedData() {
+		$this->parse ();
+		return parent::getParsedData ();
+	}
+}
+?>
