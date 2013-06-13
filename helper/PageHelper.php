@@ -1,15 +1,11 @@
 <?php
-
-
 class PageHelper {
-	
 	public static function isPageSubmitted() {
 		if (strtoupper ( $_SERVER ['REQUEST_METHOD'] ) == 'POST' || strtoupper ( $_SERVER ['REQUEST_METHOD'] ) == 'GET')
 			return true;
 		else
 			return false;
 	}
-	
 	public static function sanitizeInput($input, $type, $options = null) {
 		if ($options == null) {
 			$defaultVal = 0;
@@ -31,7 +27,6 @@ class PageHelper {
 		
 		return filter_var ( $input, $type, $options );
 	}
-	
 	public static function sanitizeInputArray($array, $type, $options = null) {
 		$temp_array = array ();
 		if ($options == null) {
@@ -39,13 +34,13 @@ class PageHelper {
 			if ($type == FILTER_SANITIZE_NUMBER_INT)
 				$defaultVal = 0;
 			
-			if ($type == FILTER_SANITIZE_NUMBER_FLOAT)
+				if ($type == FILTER_SANITIZE_NUMBER_FLOAT)
 				$defaultVal = 0.0;
 			
-			if ($type == FILTER_SANITIZE_STRING)
+				if ($type == FILTER_SANITIZE_STRING)
 				$defaultVal = "";
 			
-			$options = array (
+				$options = array (
 					'options' => array (
 							'default' => $defaultVal  // value to return if the filter fails
 					 
@@ -56,12 +51,10 @@ class PageHelper {
 		}
 		return $temp_array;
 	}
-	
 	public static function sanitizeCommaSeperatedInt($input) {
 		return implode ( ",", array_map ( "intval", explode ( ",", $input ) ) );
 	}
-	
-	public static function GetTimeSpan($time) {
+	public static function getTimeSpan($time) {
 		date_default_timezone_set ( 'Asia/Karachi' );
 		$time = time () - strtotime ( $time );
 		
@@ -82,18 +75,14 @@ class PageHelper {
 			$numberOfUnits = floor ( $time / $unit );
 			return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '');
 		}
-	
-	}	
-	
-	public static function getHttpPutData()
-	{
+	}
+	public static function getHttpPutData() {
 		$data = "";
-		$dataStream = fopen('php://input', 'r');
-		while ($dataChunk = fread($dataStream, 1024))
-		{
+		$dataStream = fopen ( 'php://input', 'r' );
+		while ( $dataChunk = fread ( $dataStream, 1024 ) ) {
 			$data .= $dataChunk;
 		}
-		fclose($dataStream);
+		fclose ( $dataStream );
 		return $data;
 	}
 }

@@ -7,14 +7,16 @@
     * @version  1.0
     * @author   S&eacute;bastien Lao&ucirc;t (slaout@linux62.org)
     */
-  require_once('/../../libs/log4php/Logger.php');
+  require_once(dirname(__FILE__) . '/../../libs/log4php/Logger.php');
   Logger::configure('logs/config.xml');
   class DB
   {
     /** Put this variable to true if you want ALL queries to be debugged by default:
       */
     var $defaultDebug = false;
+    
 	var $log;
+	
     /** INTERNAL: The start time, in miliseconds.
       */
     var $mtStart;

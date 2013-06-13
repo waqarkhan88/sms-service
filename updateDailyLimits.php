@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 date_default_timezone_set("Asia/Karachi");
 require_once('helper/db/DailySMSServicesDB.php');
 
-DailySMSServicesDB::UpdateDailyAPIAccounts();
-DailySMSServicesDB::UpdateDailyRecipients();
+DailySMSServicesDB::updateDailyAPIAccounts();
+DailySMSServicesDB::updateDailyRecipients();
 
 ?>
