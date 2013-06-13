@@ -1,106 +1,82 @@
 <?php
-/*
-	****					Modification History								****
-	********************************************************************************
-	********************************************************************************
-	****		Name: 					Haseeb Ahmed							****
-	****		Date: 					November 03,2012						****	
-	****		Description:			Connection to database					****	
-	********************************************************************************
-	********************************************************************************
-*/
 require_once 'SafeSQL.class.php';
 require_once 'DB.class.php';
 require_once 'DbHelper.class.php';
-class DailySMSServicesDB
-{
-	private $username = 'root';
-	private $password = '';
-	private $server = 'localhost';
-	private $dbName = 'DailySMSServices';
+class DailySMSServicesDB {
+	private $username = 'b13_13302111';
+	private $password = 'haseeb';
+	private $server = 'sql207.byethost13.com';
+	private $dbName = 'b13_13302111_sms_api_services';
 	private $log;
 	private $safeSQL;
 	private $db;
-		
-	public function DailySMSServicesDB()
-	{
-		$this->db = new DB($this->dbName, $this->server, $this->username, $this->password);
-		$this->safeSQL = new SafeSQL_MySQL();
+	public function DailySMSServicesDB() {
+		$this->db = new DB ( $this->dbName, $this->server, $this->username, $this->password );
+		$this->safeSQL = new SafeSQL_MySQL ();
 	}
-	
-	Public function GetAPIAccounts()
-	{
-		$result = array();
-		$query = $this->safeSQL->query("Select pk_accountId as accountId, APIKey, DailyLimit - ConsumedSMS as remainingSMS From api_accounts Where Active = 1 And DailyLimit - ConsumedSMS > 0 And APIKey is not null", array());
-		$source = $this->db->query($query);
-		while($row = $this->db->fetchNextObject($source))
-			$result[] = $row;
-	
+	public function getAPIAccounts() {
+		$result = array ();
+		$query = $this->safeSQL->query ( "Select account_id as accountId, api_key as apiKey, daily_limit - consumed_sms as remainingSMS From api_accounts Where active = 1 And daily_limit - consumed_sms > 0 And api_key is not null", array () );
+		$source = $this->db->query ( $query );
+		while ( $row = $this->db->fetchNextObject ( $source ) )
+			$result [] = $row;
+		
 		return $result;
 	}
-	
-	Public function GetRecipients($groupId)
-	{
-		$result = array();
-		$query = $this->safeSQL->query("Select R.pk_RecpId as recpId, R.phone_number, ST.name as SMSTypeCode From recipients R inner join package P ON(R.fk_PackageId = p.package_id) inner join sms_types ST ON(R.fk_SMSTypeId = ST.pk_SMSTypeId) Where R.Active = 1 And R.ConsumedSMS < P.daily_limit And (ifnull((R.LastSent + interval P.sms_interval minute), now()) <= now()) And R.fk_GroupId = %i", array($groupId));
-		$source = $this->db->query($query);
-		while($row = $this->db->fetchNextObject($source))
-			$result[] = $row;
-	
+	public function getRecipients($groupId) {
+		$result = array ();
+		$query = $this->safeSQL->query ( "Select r.recipient_id as recipientId, r.phone_number as phoneNumber, st.code as smsTypeCode From recipients r inner join package p ON(r.package_id = p.package_id) inner join sms_types st ON(r.sms_type_id = st.sms_type_id) Where r.active = 1 And r.consumed_sms < p.daily_limit And (ifnull((r.last_sent + interval p.sms_interval minute), now()) <= now()) And r.group_id = %i", array (
+				$groupId 
+		) );
+		$source = $this->db->query ( $query );
+		while ( $row = $this->db->fetchNextObject ( $source ) )
+			$result [] = $row;
+		
 		return $result;
 	}
-	Public function UpdateAPISmsCount(array $accountsCount)
-	{
-		if(count($accountsCount) > 0)
-		{
-			$query = "Update api_accounts Set ConsumedSMS = Case pk_accountId ";
-			foreach($accountsCount as $account)
-			{
-				$query .= "When " . $account["accountId"] . " Then ConsumedSMS + " . $account["count"] . " ";
+	public function updateAPISmsCount(array $accounts) {
+		if (count ( $accounts ) > 0) {
+			$query = "Update api_accounts Set consumed_sms = Case account_id ";
+			foreach ( $accounts as $account ) {
+				$query .= " When " . $account ["accountId"] . " Then consumed_sms + " . $account ["count"] . " ";
 			}
-			$query .= "Else ConsumedSMS End";
+			$query .= "Else consumed_sms End";
 			
-			$query = $this->safeSQL->query($query, array());
-			$this->db->execute($query);
+			$query = $this->safeSQL->query ( $query, array () );
+			$this->db->execute ( $query );
 		}
 	}
-	Public function UpdateRecpConsumedSMS(array $recipients)
-	{
-		if(count($recipients) > 0)
-		{
-			$query = "Update recipients Set ConsumedSMS = Case pk_RecpId ";
-			foreach($recipients as $recp)
-			{
-				$query .= "When " . $recp["recpId"] . " Then ConsumedSMS + 1 ";
+	public function updateRecipientsConsumedSMS(array $recipients) {
+		if (count ( $recipients ) > 0) {
+			$query = "Update recipients Set consumed_sms = Case recipient_id ";
+			
+			foreach ( $recipients as $recp ) {
+				$query .= "When " . $recp ["recipientId"] . " Then consumed_sms + 1 ";
 			}
-			$query .= "Else ConsumedSMS End, LastSent = case pk_RecpId ";
 			
-			foreach($recipients as $recp)
-			{
-				$query .= "When " . $recp["recpId"] . " Then '" . $recp['lastSent'] . "' ";
+			$query .= "Else consumed_sms End, last_sent = case recipient_id ";
+			
+			foreach ( $recipients as $recp ) {
+				$query .= "When " . $recp ["recipientId"] . " Then '" . $recp ['lastSent'] . "' ";
 			}
-			$query .= "Else LastSent End";
 			
+			$query .= "Else last_sent End";
 			
-			$query = $this->safeSQL->query($query, array());
-			$this->db->execute($query);
+			$query = $this->safeSQL->query ( $query, array () );
+			$this->db->execute ( $query );
 		}
 	}
-	
-	public static function UpdateDailyAPIAccounts()
-	{
-		$query = "Update api_accounts Set ConsumedSMS = 0, LastRefreshed = '" . date('Y-m-d H:i:s') . "'";
+	public static function updateDailyAPIAccounts() {
+		$query = "Update api_accounts Set consumed_sms = 0, last_refreshed = '" . date ( 'Y-m-d H:i:s' ) . "'";
 		
-		$query = $this->safeSQL->query($query, array());
-		$this->db->execute($query);
+		$query = $this->safeSQL->query ( $query, array () );
+		$this->db->execute ( $query );
 	}
-	
-	public static function UpdateDailyRecipients()
-	{
-		$query = "Update recipients R inner join payments P on(R.pk_RecpId = P.fk_RecpId) Set 		R.Active = 0 Where P.ExpiryDate <= '" . date('Y-m-d H:i:s') . "'";
+	public static function updateDailyRecipients() {
+		$query = "Update recipients r inner join payments p on(r.recipient_id = p.recipient_id) Set r.active = 0 Where p.expiry_date <= '" . date ( 'Y-m-d H:i:s' ) . "'";
 		
-		$query = $this->safeSQL->query($query, array());
-		$this->db->execute($query);
+		$query = $this->safeSQL->query ( $query, array () );
+		$this->db->execute ( $query );
 	}
 }
 ?>
