@@ -64,7 +64,7 @@ class KitcoScrapper extends MetalScrapper {
 			return $result;
 		} else {
 			$result ['Gold'] = $nyGoldAsk ? $nyGoldAsk : null;
-			$result ['Silver'] = $nytSilverAsk ? $nytSilverAsk : null;
+			$result ['Silver'] = $nySilverAsk ? $nySilverAsk : null;
 			return $result;
 		}
 	}
