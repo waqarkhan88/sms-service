@@ -75,7 +75,7 @@ if ($groupId) {
 										$recipients [$recpCount]->phoneNumber 
 								), $message );
 								$updateRecp [] = array (
-										'recpientId' => $recipients [$recpCount]->recipientId,
+										'recipientId' => $recipients [$recpCount]->recipientId,
 										'lastSent' => date ( 'Y-m-d H:i:s' ) 
 								);
 								$recpCount ++;
