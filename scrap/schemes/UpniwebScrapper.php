@@ -12,7 +12,7 @@ class UpniwebScrapper extends MetalScrapper {
 	public function fetch() {
 		$this->browser->get ( $this->url );
 		$this->rawData = $this->browser->getContent ();
-		echo $this->rawData;
+		//echo $this->rawData;
 	}
 	public function parse() {
 		$rates = null;

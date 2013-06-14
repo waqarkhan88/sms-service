@@ -56,7 +56,7 @@ class sendsmsdotpk{
 */
 	
 	private $apikey;
-	private $apiUrl = "http://api.sendsms.pk/";
+	private $apiUrl = "http://api.FreeSMSBag.com/";
 /*
 	********************************************************************************
 */	
