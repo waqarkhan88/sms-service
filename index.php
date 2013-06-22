@@ -10,6 +10,8 @@ require_once ('libs/log4php/Logger.php');
 
 Logger::configure ( 'logs/config.xml' );
 
+// test
+
 $metalScrappers = array (
 		"KitcoScrapper",
 		"UpniwebScrapper" 
