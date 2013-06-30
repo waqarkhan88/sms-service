@@ -25,7 +25,9 @@ class DailySMSServicesDB {
 	}
 	public function getRecipients($groupId) {
 		$result = array ();
-		$query = $this->safeSQL->query ( "Select r.recipient_id as recipientId, r.phone_number as phoneNumber, st.code as smsTypeCode From recipients r inner join package p ON(r.package_id = p.package_id) inner join sms_types st ON(r.sms_type_id = st.sms_type_id) Where r.active = 1 And r.consumed_sms < p.daily_limit And (ifnull((r.last_sent + interval p.sms_interval minute), now()) <= now()) And r.group_id = %i", array (
+		$query = $this->safeSQL->query ( "Select r.recipient_id as recipientId, r.phone_number as phoneNumber, st.code as smsTypeCode From recipients r inner join package p ON(r.package_id = p.package_id) inner join sms_types st ON(r.sms_type_id = st.sms_type_id) Where r.active = 1 And r.consumed_sms < p.daily_limit And (ifnull((r.last_sent + interval p.sms_interval minute), %n) <= %n) And r.group_id = %i", array (
+				date ( 'Y-m-d H:i:s' ),
+				date ( 'Y-m-d H:i:s' ),
 				$groupId 
 		) );
 		$source = $this->db->query ( $query );
@@ -66,16 +68,16 @@ class DailySMSServicesDB {
 			$this->db->execute ( $query );
 		}
 	}
-	public static function updateDailyAPIAccounts() {
-		$query = "Update api_accounts Set consumed_sms = 0, last_refreshed = '" . date ( 'Y-m-d H:i:s' ) . "'";
+	public function updateDailyAPIAccounts() {
+		$query = "Update api_accounts Set consumed_sms = 0, last_refreshed = %n";
 		
-		$query = $this->safeSQL->query ( $query, array () );
+		$query = $this->safeSQL->query ( $query, array (date ( 'Y-m-d H:i:s' )) );
 		$this->db->execute ( $query );
 	}
-	public static function updateDailyRecipients() {
-		$query = "Update recipients r inner join payments p on(r.recipient_id = p.recipient_id) Set r.active = 0 Where p.expiry_date <= '" . date ( 'Y-m-d H:i:s' ) . "'";
+	public function updateDailyRecipients() {
+		$query = "Update recipients r inner join payments p on(r.recipient_id = p.recipient_id) Set r.active = 0 Where p.expiry_date <= %n";
 		
-		$query = $this->safeSQL->query ( $query, array () );
+		$query = $this->safeSQL->query ( $query, array (date ( 'Y-m-d H:i:s' )) );
 		$this->db->execute ( $query );
 	}
 }
