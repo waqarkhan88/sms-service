@@ -10,8 +10,6 @@ require_once ('libs/log4php/Logger.php');
 
 Logger::configure ( 'logs/config.xml' );
 
-// test
-
 $metalScrappers = array (
 		"KitcoScrapper",
 		"UpniwebScrapper" 
@@ -34,7 +32,6 @@ if ($groupId) {
 	$time = "02:00:00";
 	if (intval ( date ( 'H' ) ) >= 6 || date ( 'H:i:s' ) <= $time) 	// limit b/w 6am to 2am
 	{
-		$scrapTime1 = microtime ( true );
 		foreach ( $metalScrappers as $scrapper ) {
 			require_once ('scrap/schemes/' . $scrapper . '.php');
 			$scrapper = new $scrapper ();
@@ -53,9 +50,7 @@ if ($groupId) {
 			}
 		}
 		
-		if ($metalRates || $forexRates) {
-			$scrapTime2 = microtime ( true );
-			$timeLog->info ( round ( $scrapTime2 - $scrapTime1, 2 ) );
+		if ($metalRates && $forexRates) {
 			
 			$db = new DailySMSServicesDB ();
 			$recipients = $db->getRecipients ( $groupId );
