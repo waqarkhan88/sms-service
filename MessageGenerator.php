@@ -26,8 +26,10 @@ class MessageGenerator {
 				break;
 			
 			case 'GSD' :
-				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' . 'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a') . '\n' . '$=' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a');
-				
+				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' 
+				. 'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a') . '\n' 
+				. '$=' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a') . '\n'
+				. 'Time: ' . date('H:i');
 				break;
 		}
 	}
