@@ -22,14 +22,34 @@ class MessageGenerator {
 				break;
 			
 			case 'GS' :
-				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' . 'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a');
+				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' .
+				'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a');
 				break;
 			
 			case 'GSD' :
-				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' . 'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a') . '\n' . '$=' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a');
-				
+				return 'G=' . (isset ( $this->rates ['Gold'] ) ? $this->rates ['Gold'] : 'n/a') . '\n' 
+				. 'S=' . (isset ( $this->rates ['Silver'] ) ? $this->rates ['Silver'] : 'n/a') . '\n' 
+				. '$=' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a') . '\n'
+				. 'Time: ' . date('H:i');
 				break;
+			case 'GSDLocal' :
+				return 'G: ' . (isset( $this->rates ['Gold'] ) ? CalculateLocalRates($this->rates ['Gold']) : 'n/a') . '\n' 
+				. 'S: ' . (isset ( $this->rates ['Silver'] ) ? CalculateLocalRates($this->rates ['Silver']) : 'n/a') . '\n' 
+				. '$: ' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a') . '\n'
+				. 'Time: ' . date('H:i');			
+				break;
+			
 		}
+	}
+	
+	private  function CalculateLocalRates($rate)
+	{
+		if(isset( $this->rates ['Dollar']))
+		{
+			return  round(($rate * $this->rates ['Dollar'] * 0.375006308),0);
+		}
+		else 
+			return 'n/a';				
 	}
 }
 ?>
