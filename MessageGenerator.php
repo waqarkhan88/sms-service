@@ -33,8 +33,8 @@ class MessageGenerator {
 				. 'Time: ' . date('H:i');
 				break;
 			case 'GSDLocal' :
-				return 'G: ' . (isset( $this->rates ['Gold'] ) ? CalculateLocalRates($this->rates ['Gold']) : 'n/a') . '\n' 
-				. 'S: ' . (isset ( $this->rates ['Silver'] ) ? CalculateLocalRates($this->rates ['Silver']) : 'n/a') . '\n' 
+				return 'G: ' . (isset( $this->rates ['Gold'] ) ? $this->calculateLocalRates($this->rates ['Gold']) : 'n/a') . '\n' 
+				. 'S: ' . (isset ( $this->rates ['Silver'] ) ? $this->calculateLocalRates($this->rates ['Silver']) : 'n/a') . '\n' 
 				. '$: ' . (isset ( $this->rates ['Dollar'] ) ? $this->rates ['Dollar'] : 'n/a') . '\n'
 				. 'Time: ' . date('H:i');			
 				break;
@@ -42,7 +42,7 @@ class MessageGenerator {
 		}
 	}
 	
-	private  function CalculateLocalRates($rate)
+	private  function calculateLocalRates($rate)
 	{
 		if(isset( $this->rates ['Dollar']))
 		{
