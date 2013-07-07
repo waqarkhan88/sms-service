@@ -79,6 +79,11 @@ class DailySMSServicesDB {
 		
 		$query = $this->safeSQL->query ( $query, array (date ( 'Y-m-d H:i:s' )) );
 		$this->db->execute ( $query );
+		
+		$query = "Update recipients Set consumed_sms = 0 Where  active = 1";
+		
+		$query = $this->safeSQL->query ( $query, array () );
+		$this->db->execute ( $query );
 	}
 }
 ?>
